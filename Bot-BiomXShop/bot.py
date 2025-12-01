@@ -14,7 +14,7 @@ from handlers.callbacks import register_handlers as callback_handlers
 
 start_handlers(bot)
 menu_handlers(bot)
-callback_handlers(bot)
+callback_handlers(bot, is_private=Fale)
 
 # Запуск автопостинга (важно: только один аргумент — bot!)
 threading.Thread(
@@ -25,4 +25,5 @@ threading.Thread(
 
 print("Bot started")
 bot.infinity_polling(none_stop=True)
+
 
