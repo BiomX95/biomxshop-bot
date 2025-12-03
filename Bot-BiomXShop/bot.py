@@ -3,7 +3,9 @@ import threading
 
 from config import TOKEN
 from handlers.autopost import auto_posting_sync
-from handlers.roulette import register_handlers as roulette_handlers
+from handlers.wheel import register_handlers as wheel_handlers
+wheel_handlers(bot)
+
 
 # после создания bot и определения is_private (если ты используешь)
 roulette_handlers(bot, is_private=False)   # вторым аргументом можно передать is_private, но внутри есть своя проверка
@@ -29,6 +31,7 @@ threading.Thread(
 
 print("Bot started")
 bot.infinity_polling(none_stop=True)
+
 
 
 
