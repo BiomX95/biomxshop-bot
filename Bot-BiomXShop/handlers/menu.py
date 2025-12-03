@@ -19,8 +19,12 @@ def register_handlers(bot):
             )
             markup.add(
                 types.InlineKeyboardButton("АККАУНТ №5🚹", callback_data="rent5"),
-                types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent6")
+                types.InlineKeyboardButton("АККАУНТ №6🚹", callback_data="rent6")
             )
+              markup.add(
+                types.InlineKeyboardButton("АККАУНТ №7🚹", callback_data="rent7"),
+                types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent8")
+              )
             bot.send_message(message.chat.id, "Выберите аккаунт для аренды:", reply_markup=markup)
 
         elif message.text == "💎Алмазы":
@@ -125,6 +129,7 @@ def register_handlers(bot):
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
 
 
 
