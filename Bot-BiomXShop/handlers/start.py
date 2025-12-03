@@ -1,5 +1,6 @@
 from telebot import types
 from config import IMG_PATH
+from handlers import wheel  # Импорт твоего wheel.py
 
 def register_handlers(bot):
 
@@ -8,7 +9,7 @@ def register_handlers(bot):
         if message.chat.type != "private":
             return  # Блокировка групп
 
-        # --- Создаём клавиатуру ---
+        # --- Клавиатура ---
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
         btn1 = types.KeyboardButton("⏰Аренда аккаунтов")
         btn2 = types.KeyboardButton("Переходник")
@@ -17,11 +18,11 @@ def register_handlers(bot):
         btn5 = types.KeyboardButton("🎁Особая посылка")
         btn6 = types.KeyboardButton("⭐️Telegram stars")
         btn7 = types.KeyboardButton("🚀🎮VPN для FF")
-        btn8 = types.KeyboardButton("🎡Рулетка")  # Новая кнопка
+        btn8 = types.KeyboardButton("🎡 Рулетка")  # Новая кнопка
 
         markup.add(btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8)
 
-        # --- Отправка приветственного фото ---
+        # --- Фото приветствия ---
         with open(IMG_PATH + "logo.jpg", "rb") as logo:
             bot.send_photo(
                 message.chat.id,
@@ -37,12 +38,8 @@ def register_handlers(bot):
                 reply_markup=markup
             )
 
-    # --- Обработчик нажатий на кнопку рулетка ---
-    @bot.message_handler(func=lambda message: message.text == "🎡Рулетка" and message.chat.type == "private")
-    def roulette(message):
-        bot.send_message(
-            message.chat.id,
-            "🎡 Добро пожаловать в рулетку! Сейчас будет крутка..."
-        )
-        # Здесь позже будет логика самой рулетки
+    # --- Рулетка ---
+    @bot.message_handler(func=lambda m: m.chat.type == "private" and m.text == "🎡 Рулетка")
+    def start_wheel(message):
+        wheel.start_wheel(bot, message)  # В wheel.py вынеси логику wheel.register_handlers в функцию start_wheel(bot, message)
 
