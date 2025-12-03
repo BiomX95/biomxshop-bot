@@ -4,6 +4,7 @@ from telebot import types
 
 FILE_PATH = "wheel_data.json"
 
+# Заглушки кодов
 PRIZE_CODES = {
     1: "CODE-CLOWN-XXX",
     2: "CODE-GIRL-XXX",
@@ -12,6 +13,7 @@ PRIZE_CODES = {
     5: "CODE-PROPUSK1H-XXX"
 }
 
+# Призы
 PRIZES = {
     1: "🎭 Аккаунт с клоуном (5 часов)",
     2: "👩 Аккаунт женский (3 часа)",
@@ -48,7 +50,8 @@ def start_wheel(bot, message):
     if not can:
         hours = wait_time // 3600
         minutes = (wait_time % 3600) // 60
-        bot.send_message(message.chat.id, f"Ты уже крутил рулетку! Следующая попытка через {hours} ч {minutes} мин.")
+        bot.send_message(message.chat.id,
+                         f"Ты уже крутил рулетку! Следующая попытка через {hours} ч {minutes} мин.")
         return
 
     markup = types.InlineKeyboardMarkup()
@@ -75,5 +78,18 @@ def register_callbacks(bot):
             bot.send_message(call.message.chat.id, prize_text)
         else:
             code = PRIZE_CODES[prize_num]
-            bot.send_message(call.message.chat.id, f"Поздравляем! Ты выиграл:\n\n{prize_text}\n\nТвой код:\n{code}")
+            bot.send_message(call.message.chat.id,
+                             f"Поздравляем! Ты выиграл:\n\n{prize_text}\n\nТвой код:\n{code}")
+
+def register_handlers(bot):
+    """
+    Главная функция для импорта в bot.py:
+    регистрирует и кнопку "🎡 Рулетка", и callback для кручения.
+    """
+    @bot.message_handler(func=lambda m: m.chat.type == "private" and m.text == "🎡 Рулетка")
+    def _start_wheel(message):
+        start_wheel(bot, message)
+
+    # Регистрируем callback кнопки
+    register_callbacks(bot)
 
