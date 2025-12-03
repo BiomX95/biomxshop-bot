@@ -1,10 +1,10 @@
 from telebot import types
 from config import DONATE_IMG, IMG_PATH
+from handlers import wheel  # Импорт для рулетки
 
 def register_handlers(bot):
 
     @bot.message_handler(func=lambda m: m.chat.type == "private")
-
     def menu(message):
 
         if message.text == "⏰Аренда аккаунтов":
@@ -21,7 +21,7 @@ def register_handlers(bot):
                 types.InlineKeyboardButton("АККАУНТ №5🚹", callback_data="rent5"),
                 types.InlineKeyboardButton("АККАУНТ №6🚹", callback_data="rent6")
             )
-              markup.add(
+            markup.add(
                 types.InlineKeyboardButton("АККАУНТ №7🚹", callback_data="rent7"),
                 types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent8")
             )
@@ -78,7 +78,7 @@ def register_handlers(bot):
                 bot.send_photo(
                     message.chat.id,
                     photo,
-                    caption="Скоро выйдет наш сайт маркетплейс:\nhttps://biomx.shop\n Следите за обновлениями!- @BiomXShops"
+                    caption="Скоро выйдет наш сайт маркетплейс:\nhttps://biomx.shop\nСледите за обновлениями! - @BiomXShops"
                 )
 
         elif message.text == "🎁Особая посылка":
@@ -86,7 +86,7 @@ def register_handlers(bot):
                 bot.send_photo(
                     message.chat.id,
                     photo,
-                    caption="Покупаем особые посылки и любые другие внутреигровые донаты🎁🤩\n Писать: @BiomXShop_Support"
+                    caption="Покупаем особые посылки и любые другие внутреигровые донаты🎁🤩\nПисать: @BiomXShop_Support"
                 )
 
         elif message.text == "⭐️Telegram stars":
@@ -127,10 +127,11 @@ def register_handlers(bot):
                     reply_markup=keyboard
                 )
 
+        elif message.text == "🎡 Рулетка":
+            wheel.start_wheel(bot, message)  # вызов рулетки
+
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
-
-
 
 
 
