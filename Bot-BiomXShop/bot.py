@@ -3,26 +3,22 @@ import threading
 
 from config import TOKEN
 from handlers.autopost import auto_posting_sync
-from handlers.wheel import register_handlers as wheel_handlers
-wheel_handlers(bot)
 
-
-# после создания bot и определения is_private (если ты используешь)
-roulette_handlers(bot, is_private=False)   # вторым аргументом можно передать is_private, но внутри есть своя проверка
-
-# Инициализация бота
+# 1. Создаем бота
 bot = telebot.TeleBot(TOKEN, parse_mode="HTML")
 
-# Регистрация всех хендлеров
+# 2. Регистрируем хендлеры
 from handlers.start import register_handlers as start_handlers
 from handlers.menu import register_handlers as menu_handlers
 from handlers.callbacks import register_handlers as callback_handlers
+from handlers.wheel import register_handlers as wheel_handlers
 
 start_handlers(bot)
 menu_handlers(bot)
-callback_handlers(bot, is_private=True)
+callback_handlers(bot)
+wheel_handlers(bot)   # ← теперь ОК
 
-# Запуск автопостинга (важно: только один аргумент — bot!)
+# 3. Запуск автопостинга
 threading.Thread(
     target=auto_posting_sync,
     args=(bot,),
