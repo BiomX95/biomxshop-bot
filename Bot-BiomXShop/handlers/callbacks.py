@@ -47,9 +47,22 @@ def register_handlers(bot, is_private=False):
                 RENT_IMG + "DAGPropysk2.jpg",
                 descriptions[5]
             )
-
-        elif call.data == "rent6":
-            bot.send_message(call.message.chat.id, descriptions[6])
+             elif call.data == "rent6":
+            send_two_photos(
+                bot, call.message,
+                RENT_IMG + "yasmi.jpg",
+                RENT_IMG + "yasmi.jpg",
+                descriptions[6]
+           )
+             elif call.data == "rent7":
+            send_two_photos(
+                bot, call.message,
+                RENT_IMG + "tyrpalpropusk.jpg",
+                RENT_IMG + "tyrpalpropusk.jpg",
+                descriptions[7]
+            )
+        elif call.data == "rent8":
+            bot.send_message(call.message.chat.id, descriptions[8])
 
         # VPN keys
         elif call.data == "vpn_ios":
@@ -67,6 +80,7 @@ def register_handlers(bot, is_private=False):
                    "xtls-rprx-vision&encryption=none#avovpn.com")
             bot.answer_callback_query(call.id, "Ключ отправлен")
             bot.send_message(call.message.chat.id, key)
+
 
 
 
