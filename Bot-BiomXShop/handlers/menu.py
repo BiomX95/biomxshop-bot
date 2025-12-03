@@ -4,7 +4,7 @@ from config import IMG_PATH
 
 def register_handlers(bot):
 
-    @bot.message_handler(func=lambda m: True)
+ @bot.message_handler(func=lambda m: m.chat.type == "private")
     def menu(message):
 
         if message.text == "⏰Аренда аккаунтов":
@@ -125,3 +125,4 @@ def register_handlers(bot):
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
