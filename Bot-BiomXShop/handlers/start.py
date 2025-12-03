@@ -3,7 +3,6 @@ from config import IMG_PATH
 from handlers import wheel  # Импорт твоего wheel.py
 
 def register_handlers(bot):
-
     @bot.message_handler(commands=['start'])
     def start(message):
         if message.chat.type != "private":
@@ -38,8 +37,6 @@ def register_handlers(bot):
                 reply_markup=markup
             )
 
-    # --- Рулетка ---
-    @bot.message_handler(func=lambda m: m.chat.type == "private" and m.text == "🎡 Рулетка")
-    def start_wheel(message):
-        wheel.start_wheel(bot, message)  # В wheel.py вынеси логику wheel.register_handlers в функцию start_wheel(bot, message)
+    # --- Регистрируем рулетку ---
+    wheel.register_handlers(bot)  # <-- Здесь подключаем все хендлеры рулетки
 
