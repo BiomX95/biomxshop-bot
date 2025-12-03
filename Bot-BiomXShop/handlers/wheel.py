@@ -114,7 +114,7 @@ def register_handlers(bot):
                 code = PRIZE_CODES[prize_num]
                 bot.send_message(
                     call.message.chat.id,
-                    f"🎉 Поздравляем! Ты выиграл:\n\n{prize_text}\n\nТвой код:\n{code}"
+                    f"🎉 Поздравляем! Ты выиграл:\n\n{prize_text}\n\nТвой код:\n\nОтправь это сообщение мне:@BiomXShop_Support\n{code}"
                 )
 
         threading.Thread(target=_spin_thread, daemon=True).start()
