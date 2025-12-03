@@ -16,8 +16,10 @@ def register_handlers(bot):
         btn5 = types.KeyboardButton("🎁Особая посылка")
         btn6 = types.KeyboardButton("⭐️Telegram stars")
         btn7 = types.KeyboardButton("🚀🎮VPN для FF")
+btn8 = types.KeyboardButton("🎡 Рулетка")
+markup.add(btn1, btn2, btn3, btn4)
+markup.add(btn5, btn6, btn7, btn8)
 
-        markup.add(btn1, btn2, btn3, btn4, btn5, btn6, btn7)
 
         with open(IMG_PATH + "logo.jpg", "rb") as logo:
             bot.send_photo(
@@ -33,4 +35,5 @@ def register_handlers(bot):
                 ),
                 reply_markup=markup
             )
+
 
