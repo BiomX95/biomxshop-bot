@@ -1,10 +1,15 @@
 # handlers/wheel.py
-import json, os, random, time
+import json
+import os
+import random
+import time
+import threading
 from telebot import types
 
+# Файл для хранения последних прокрутов пользователей
 FILE_PATH = "wheel_data.json"
 
-# Заглушки кодов
+# Заглушки кодов для призов 1–5
 PRIZE_CODES = {
     1: "CODE-CLOWN-XXX",
     2: "CODE-GIRL-XXX",
@@ -13,7 +18,7 @@ PRIZE_CODES = {
     5: "CODE-PROPUSK1H-XXX"
 }
 
-# Призы
+# Призы рулетки
 PRIZES = {
     1: "🎭 Аккаунт с клоуном (5 часов)",
     2: "👩 Аккаунт женский (3 часа)",
@@ -23,73 +28,93 @@ PRIZES = {
     6: "❌ Проигрыш! Попробуй в следующий раз."
 }
 
+# --- Вспомогательные функции ---
 def load_data():
+    """Загрузка JSON с последними прокрутами"""
     if not os.path.exists(FILE_PATH):
         return {}
     with open(FILE_PATH, "r", encoding="utf-8") as f:
         return json.load(f)
 
 def save_data(data):
+    """Сохранение JSON"""
     with open(FILE_PATH, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=4, ensure_ascii=False)
 
 def can_spin(user_id):
+    """Проверка, прошли ли 24 часа с последнего прокрута"""
     data = load_data()
     if str(user_id) not in data:
         return True, 0
     last_spin = data[str(user_id)]
     now = time.time()
     diff = now - last_spin
-    if diff >= 86400:
+    if diff >= 86400:  # 24 часа
         return True, 0
     else:
         return False, int(86400 - diff)
 
-def start_wheel(bot, message):
-    can, wait_time = can_spin(message.from_user.id)
-    if not can:
-        hours = wait_time // 3600
-        minutes = (wait_time % 3600) // 60
-        bot.send_message(message.chat.id,
-                         f"Ты уже крутил рулетку! Следующая попытка через {hours} ч {minutes} мин.")
-        return
+# --- Основные хендлеры ---
+def register_handlers(bot):
+    """Регистрирует кнопки рулетки и спины"""
 
-    markup = types.InlineKeyboardMarkup()
-    btn = types.InlineKeyboardButton("🎰 Крутить рулетку", callback_data="spin_wheel")
-    markup.add(btn)
-    bot.send_message(message.chat.id, "Готов? Жми кнопку и крути рулетку!", reply_markup=markup)
+    # Кнопка меню "🎡 Рулетка"
+    @bot.message_handler(func=lambda m: m.chat.type == "private" and m.text == "🎡 Рулетка")
+    def start_wheel(message):
+        user_id = message.from_user.id
+        can, wait_time = can_spin(user_id)
 
-def register_callbacks(bot):
+        if not can:
+            hours = wait_time // 3600
+            minutes = (wait_time % 3600) // 60
+            bot.send_message(
+                message.chat.id,
+                f"⏳ Ты уже крутил рулетку! Следующая попытка через {hours} ч {minutes} мин."
+            )
+            return
+
+        # Создаем кнопку "Крутить рулетку"
+        markup = types.InlineKeyboardMarkup()
+        btn = types.InlineKeyboardButton("🎰 Крутить рулетку", callback_data="spin_wheel")
+        markup.add(btn)
+
+        bot.send_message(
+            message.chat.id,
+            "Готов? Жми кнопку и крути рулетку!",
+            reply_markup=markup
+        )
+
+    # Обработчик нажатия кнопки "Крутить рулетку"
     @bot.callback_query_handler(func=lambda call: call.data == "spin_wheel")
     def spin(call):
-        user_id = call.from_user.id
-        prize_num = random.randint(1, 6)
-        prize_text = PRIZES[prize_num]
 
-        data = load_data()
-        data[str(user_id)] = time.time()
-        save_data(data)
+        def _spin_thread():
+            user_id = call.from_user.id
 
-        bot.answer_callback_query(call.id)
-        bot.edit_message_text("🎡 Крутится...", call.message.chat.id, call.message.message_id)
-        time.sleep(2)
+            # Случайный приз
+            prize_num = random.randint(1, 6)
+            prize_text = PRIZES[prize_num]
 
-        if prize_num == 6:
-            bot.send_message(call.message.chat.id, prize_text)
-        else:
-            code = PRIZE_CODES[prize_num]
-            bot.send_message(call.message.chat.id,
-                             f"Поздравляем! Ты выиграл:\n\n{prize_text}\n\nТвой код:\n{code}")
+            # Сохраняем время прокрута
+            data = load_data()
+            data[str(user_id)] = time.time()
+            save_data(data)
 
-def register_handlers(bot):
-    """
-    Главная функция для импорта в bot.py:
-    регистрирует и кнопку "🎡 Рулетка", и callback для кручения.
-    """
-    @bot.message_handler(func=lambda m: m.chat.type == "private" and m.text == "🎡 Рулетка")
-    def _start_wheel(message):
-        start_wheel(bot, message)
+            # Ответ на нажатие кнопки
+            bot.answer_callback_query(call.id, "Крутим рулетку...")
+            bot.edit_message_text("🎡 Крутится...", call.message.chat.id, call.message.message_id)
 
-    # Регистрируем callback кнопки
-    register_callbacks(bot)
+            # Имитация кручения
+            time.sleep(2)
 
+            # Сообщение с результатом
+            if prize_num == 6:
+                bot.send_message(call.message.chat.id, prize_text)
+            else:
+                code = PRIZE_CODES[prize_num]
+                bot.send_message(
+                    call.message.chat.id,
+                    f"🎉 Поздравляем! Ты выиграл:\n\n{prize_text}\n\nТвой код:\n{code}"
+                )
+
+        threading.Thread(target=_spin_thread, daemon=True).start()
