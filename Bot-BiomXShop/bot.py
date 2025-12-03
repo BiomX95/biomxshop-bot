@@ -3,6 +3,10 @@ import threading
 
 from config import TOKEN
 from handlers.autopost import auto_posting_sync
+from handlers.roulette import register_handlers as roulette_handlers
+
+# после создания bot и определения is_private (если ты используешь)
+roulette_handlers(bot, is_private=False)   # вторым аргументом можно передать is_private, но внутри есть своя проверка
 
 # Инициализация бота
 bot = telebot.TeleBot(TOKEN, parse_mode="HTML")
@@ -25,6 +29,7 @@ threading.Thread(
 
 print("Bot started")
 bot.infinity_polling(none_stop=True)
+
 
 
 
