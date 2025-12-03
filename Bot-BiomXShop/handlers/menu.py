@@ -1,5 +1,5 @@
 from telebot import types
-from config import DONATE_IMG, IMG_PATH, RENT_IMG
+from config import DONATE_IMG, IMG_PATH,
 from handlers import wheel  # Импорт для рулетки
 
 def register_handlers(bot):
@@ -132,6 +132,7 @@ def register_handlers(bot):
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
 
 
 
