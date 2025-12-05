@@ -4,10 +4,9 @@ from handlers import wheel  # Импорт для рулетки
 
 def register_handlers(bot):
 
-    # ================= ОБРАБОТКА СООБЩЕНИЙ =================
-    # Работает ТОЛЬКО в личке бота. В группах игнорируется.
-    @bot.message_handler(func=lambda message: message.chat.type == "private")
-    def message_handler(message):
+   @bot.callback_query_handler(func=lambda call: True)
+def callback(call):
+
 
         if message.text == "⏰Аренда аккаунтов":
             markup = types.InlineKeyboardMarkup()
@@ -27,14 +26,12 @@ def register_handlers(bot):
                 types.InlineKeyboardButton("АККАУНТ №7🚹", callback_data="rent7"),
                 types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent8")
             )
-            bot.send_message(
-                message.chat.id, 
-                "Выберите аккаунт для аренды:", 
-                reply_markup=markup
-            )
+            bot.send_message(message.chat.id, "Выберите аккаунт для аренды:", reply_markup=markup)
 
         elif message.text == "💎Алмазы":
-            bot.send_message(message.chat.id, """У нас цены ниже рыночных 🏷
+            bot.send_message(
+                message.chat.id,
+                """У нас цены ниже рыночных 🏷
 У нас цены ниже
 Рыночных 🏷
 Скидки на донаты💎🛍
@@ -64,13 +61,14 @@ def register_handlers(bot):
 
 🎁Так же могу купить внутреигровые донаты: Особая посылка, Пропуск прокачки.
 
-✍️По вопросам: @BiomXShop_Support""")
+✍️По вопросам: @BiomXShop_Support"""
+            )
 
         elif message.text == "Переходник":
             bot.send_message(
                 message.chat.id,
                 "Основной канал — @BiomXShops\n"
-                "Отзывы — @BiomXShop_Otzив\n"
+                "Отзывы — @BiomXShop_Otziv\n"
                 "Официальный Чат — @BiomXShop_Chat\n"
                 "Чат по Free Fire — @Freec_Fire\n"
                 "Сотрудничество — @BiomXShop_Sotryd"
@@ -97,7 +95,8 @@ def register_handlers(bot):
                 bot.send_photo(
                     message.chat.id,
                     photo,
-                    caption="""🌟 50 Stars — 72₽
+                    caption="""
+🌟 50 Stars — 72₽
 🌟 75 Stars — 105₽
 🌟 100 Stars — 138₽
 🌟 150 Stars — 208₽
@@ -115,11 +114,13 @@ def register_handlers(bot):
 
         elif message.text == "🚀🎮VPN для FF":
             with open(IMG_PATH + "vpn.jpg", "rb") as photo:
+
                 keyboard = types.InlineKeyboardMarkup()
                 keyboard.add(
                     types.InlineKeyboardButton("Ключ для iPhone", callback_data="vpn_ios"),
                     types.InlineKeyboardButton("Ключ для Android", callback_data="vpn_android")
                 )
+
                 bot.send_photo(
                     message.chat.id,
                     photo,
@@ -128,30 +129,13 @@ def register_handlers(bot):
                 )
 
         elif message.text == "🎡 Рулетка":
-            wheel.start_wheel(bot, message)
+            wheel.start_wheel(bot, message)  # вызов рулетки
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
 
 
-    # ================= ОБРАБОТКА CALLBACK (бот и группы) =================
-    @bot.callback_query_handler(func=lambda call: True)
-    def callback(call):
 
-        # обязательно — чтобы кнопка после нажатия не висела часами
-        bot.answer_callback_query(call.id)
 
-        # здесь обрабатываются ВСЕ кнопки (твои rent1, vpn_ios и т.д.)
-        # функционал ты добавишь сам, я ничего не трогаю
-
-        # пример, чтобы не было пустого обработчика
-        if call.data == "vpn_ios":
-            bot.send_message(call.message.chat.id, "Ваш ключ для iPhone: ...")
-
-        elif call.data == "vpn_android":
-            bot.send_message(call.message.chat.id, "Ваш ключ для Android: ...")
-
-        # все остальные callback (rent1, rent2 и другие)
-        # оставил пустыми, чтобы код не ломался
 
 
