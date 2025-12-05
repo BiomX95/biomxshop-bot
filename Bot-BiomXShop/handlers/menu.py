@@ -4,8 +4,9 @@ from handlers import wheel  # Импорт для рулетки
 
 def register_handlers(bot):
 
-    # ОБРАБОТКА СООБЩЕНИЙ
-    @bot.message_handler(func=lambda message: True)
+    # ================= ОБРАБОТКА СООБЩЕНИЙ =================
+    # Работает ТОЛЬКО в личке бота. В группах игнорируется.
+    @bot.message_handler(func=lambda message: message.chat.type == "private")
     def message_handler(message):
 
         if message.text == "⏰Аренда аккаунтов":
@@ -69,7 +70,7 @@ def register_handlers(bot):
             bot.send_message(
                 message.chat.id,
                 "Основной канал — @BiomXShops\n"
-                "Отзывы — @BiomXShop_Otziv\n"
+                "Отзывы — @BiomXShop_Otzив\n"
                 "Официальный Чат — @BiomXShop_Chat\n"
                 "Чат по Free Fire — @Freec_Fire\n"
                 "Сотрудничество — @BiomXShop_Sotryd"
@@ -114,13 +115,11 @@ def register_handlers(bot):
 
         elif message.text == "🚀🎮VPN для FF":
             with open(IMG_PATH + "vpn.jpg", "rb") as photo:
-
                 keyboard = types.InlineKeyboardMarkup()
                 keyboard.add(
                     types.InlineKeyboardButton("Ключ для iPhone", callback_data="vpn_ios"),
                     types.InlineKeyboardButton("Ключ для Android", callback_data="vpn_android")
                 )
-
                 bot.send_photo(
                     message.chat.id,
                     photo,
@@ -134,10 +133,25 @@ def register_handlers(bot):
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
 
-    # ОБРАБОТКА CALLBACK КНОПОК
+
+    # ================= ОБРАБОТКА CALLBACK (бот и группы) =================
     @bot.callback_query_handler(func=lambda call: True)
     def callback(call):
-        bot.answer_callback_query(call.id)  # отдаём ответ, чтобы кнопка не висела
 
-        # Все callback обработчики будут здесь
-        # (rent1, rent2, vpn_ios, vpn_android и т.д.)
+        # обязательно — чтобы кнопка после нажатия не висела часами
+        bot.answer_callback_query(call.id)
+
+        # здесь обрабатываются ВСЕ кнопки (твои rent1, vpn_ios и т.д.)
+        # функционал ты добавишь сам, я ничего не трогаю
+
+        # пример, чтобы не было пустого обработчика
+        if call.data == "vpn_ios":
+            bot.send_message(call.message.chat.id, "Ваш ключ для iPhone: ...")
+
+        elif call.data == "vpn_android":
+            bot.send_message(call.message.chat.id, "Ваш ключ для Android: ...")
+
+        # все остальные callback (rent1, rent2 и другие)
+        # оставил пустыми, чтобы код не ломался
+
+
