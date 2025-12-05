@@ -4,9 +4,11 @@ from handlers import wheel  # Импорт для рулетки
 
 def register_handlers(bot):
 
-    @bot.message_handler(func=lambda m: m.chat.type == "private")
+    # Даем возможность работать везде (и в группе, и в личке)
+    @bot.message_handler(content_types=['text'])
     def menu(message):
 
+        # Аренда
         if message.text == "⏰Аренда аккаунтов":
             markup = types.InlineKeyboardMarkup()
             markup.add(
@@ -27,6 +29,7 @@ def register_handlers(bot):
             )
             bot.send_message(message.chat.id, "Выберите аккаунт для аренды:", reply_markup=markup)
 
+        # Алмазы
         elif message.text == "💎Алмазы":
             bot.send_message(
                 message.chat.id,
@@ -63,6 +66,7 @@ def register_handlers(bot):
 ✍️По вопросам: @BiomXShop_Support"""
             )
 
+        # Переходник
         elif message.text == "Переходник":
             bot.send_message(
                 message.chat.id,
@@ -73,6 +77,7 @@ def register_handlers(bot):
                 "Сотрудничество — @BiomXShop_Sotryd"
             )
 
+        # Наш сайт
         elif message.text == "🎮Наш сайт":
             with open(IMG_PATH + "logo2.jpg", "rb") as photo:
                 bot.send_photo(
@@ -81,6 +86,7 @@ def register_handlers(bot):
                     caption="Скоро выйдет наш сайт маркетплейс:\nhttps://biomx.shop\nСледите за обновлениями! - @BiomXShops"
                 )
 
+        # Особая посылка
         elif message.text == "🎁Особая посылка":
             with open(DONATE_IMG + "posilka.jpg", "rb") as photo:
                 bot.send_photo(
@@ -89,6 +95,7 @@ def register_handlers(bot):
                     caption="Покупаем особые посылки и любые другие внутреигровые донаты🎁🤩\nПисать: @BiomXShop_Support"
                 )
 
+        # Stars
         elif message.text == "⭐️Telegram stars":
             with open(DONATE_IMG + "stars.jpg", "rb") as photo:
                 bot.send_photo(
@@ -111,6 +118,7 @@ def register_handlers(bot):
 Писать: @BiomXShop_Support"""
                 )
 
+        # VPN
         elif message.text == "🚀🎮VPN для FF":
             with open(IMG_PATH + "vpn.jpg", "rb") as photo:
 
@@ -127,20 +135,17 @@ def register_handlers(bot):
                     reply_markup=keyboard
                 )
 
+        # Рулетка
         elif message.text == "🎡 Рулетка":
-            wheel.start_wheel(bot, message)  # вызов рулетки
+            wheel.start_wheel(bot, message)
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
 
 
-
-
-
-
-
-
-
-
-
-
+    # ОБРАБОТЧИК CALLBACK-КНОПОК (ОБЯЗАТЕЛЬНО!)
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        bot.answer_callback_query(call.id, "Обрабатываю...")
+        # Тут твоя логика callback'ов
+        # Можно оставить пустым если у тебя они в других файлах
