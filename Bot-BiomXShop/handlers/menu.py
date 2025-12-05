@@ -1,22 +1,10 @@
 from telebot import types
 from config import DONATE_IMG, IMG_PATH
-from handlers import wheel
+from handlers import wheel  # Импорт для рулетки
 
 def register_handlers(bot):
 
-    TEXT_BUTTONS = [
-        "⏰Аренда аккаунтов",
-        "💎Алмазы",
-        "Переходник",
-        "🎮Наш сайт",
-        "🎁Особая посылка",
-        "⭐️Telegram stars",
-        "🚀🎮VPN для FF",
-        "🎡 Рулетка"
-    ]
-
-    # ХЕНДЛЕР С РЕАЛЬНОЙ ФИЛЬТРАЦИЕЙ
-    @bot.message_handler(func=lambda m: m.text in TEXT_BUTTONS)
+    @bot.message_handler(func=lambda m: m.chat.type == "private")
     def menu(message):
 
         if message.text == "⏰Аренда аккаунтов":
@@ -140,10 +128,13 @@ def register_handlers(bot):
                 )
 
         elif message.text == "🎡 Рулетка":
-            wheel.start_wheel(bot, message)
+            wheel.start_wheel(bot, message)  # вызов рулетки
 
-    # ОБЯЗАТЕЛЬНО ДОЛЖЕН БЫТЬ callback_query_handler
-    @bot.callback_query_handler(func=lambda call: True)
-    def callback(call):
-        bot.answer_callback_query(call.id)
-        # Логику callback'ов ты добавляешь сам
+        else:
+            bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
+
+
+
+
+
