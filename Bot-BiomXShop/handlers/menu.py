@@ -4,8 +4,9 @@ from handlers import wheel  # Импорт для рулетки
 
 def register_handlers(bot):
 
- @bot.callback_query_handler(func=lambda call: True)
-def callback(call):
+    # ОБРАБОТКА СООБЩЕНИЙ
+    @bot.message_handler(func=lambda message: True)
+    def message_handler(message):
 
         if message.text == "⏰Аренда аккаунтов":
             markup = types.InlineKeyboardMarkup()
@@ -25,12 +26,14 @@ def callback(call):
                 types.InlineKeyboardButton("АККАУНТ №7🚹", callback_data="rent7"),
                 types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent8")
             )
-            bot.send_message(message.chat.id, "Выберите аккаунт для аренды:", reply_markup=markup)
+            bot.send_message(
+                message.chat.id, 
+                "Выберите аккаунт для аренды:", 
+                reply_markup=markup
+            )
 
         elif message.text == "💎Алмазы":
-            bot.send_message(
-                message.chat.id,
-                """У нас цены ниже рыночных 🏷
+            bot.send_message(message.chat.id, """У нас цены ниже рыночных 🏷
 У нас цены ниже
 Рыночных 🏷
 Скидки на донаты💎🛍
@@ -60,8 +63,7 @@ def callback(call):
 
 🎁Так же могу купить внутреигровые донаты: Особая посылка, Пропуск прокачки.
 
-✍️По вопросам: @BiomXShop_Support"""
-            )
+✍️По вопросам: @BiomXShop_Support""")
 
         elif message.text == "Переходник":
             bot.send_message(
@@ -94,8 +96,7 @@ def callback(call):
                 bot.send_photo(
                     message.chat.id,
                     photo,
-                    caption="""
-🌟 50 Stars — 72₽
+                    caption="""🌟 50 Stars — 72₽
 🌟 75 Stars — 105₽
 🌟 100 Stars — 138₽
 🌟 150 Stars — 208₽
@@ -128,14 +129,15 @@ def callback(call):
                 )
 
         elif message.text == "🎡 Рулетка":
-            wheel.start_wheel(bot, message)  # вызов рулетки
+            wheel.start_wheel(bot, message)
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
 
+    # ОБРАБОТКА CALLBACK КНОПОК
+    @bot.callback_query_handler(func=lambda call: True)
+    def callback(call):
+        bot.answer_callback_query(call.id)  # отдаём ответ, чтобы кнопка не висела
 
-
-
-
-
-
+        # Все callback обработчики будут здесь
+        # (rent1, rent2, vpn_ios, vpn_android и т.д.)
