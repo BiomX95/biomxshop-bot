@@ -4,8 +4,8 @@ from handlers import wheel  # Импорт для рулетки
 
 def register_handlers(bot):
 
-    @bot.message_handler(func=lambda m: m.chat.type == "private")
-    def menu(message):
+ @bot.callback_query_handler(func=lambda call: True)
+def callback(call):
 
         if message.text == "⏰Аренда аккаунтов":
             markup = types.InlineKeyboardMarkup()
@@ -132,6 +132,7 @@ def register_handlers(bot):
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
 
 
 
