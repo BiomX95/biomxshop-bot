@@ -10,6 +10,7 @@ CHAT_IDS = [
     -1003069650175,   # Мой чат №1
     -1002379198855   # чат Дарьи борисенко №2 
 ]
-AUTOPOST_INTERVAL_SECONDS = 270
+AUTOPOST_INTERVAL_SECONDS = 370
+
 
 
