@@ -63,8 +63,15 @@ def register_handlers(bot, is_private=False):
                 RENT_IMG + "yasmi.jpg",  # Вторая фотка отсутствует — копия
                 descriptions[7]
             )
-
-        elif call.data == "rent8":
+            
+elif call.data == "rent8":
+            send_two_photos(
+                bot, call.message,
+                RENT_IMG + "yasmi.jpg",
+                RENT_IMG + "yasmi.jpg",  # Вторая фотка отсутствует — копия
+                descriptions[8]
+            )
+        elif call.data == "rent9":
             bot.send_message(call.message.chat.id, descriptions[6])
 
         # VPN keys
@@ -83,6 +90,7 @@ def register_handlers(bot, is_private=False):
                    "xtls-rprx-vision&encryption=none#avovpn.com")
             bot.answer_callback_query(call.id, "Ключ отправлен")
             bot.send_message(call.message.chat.id, key)
+
 
 
 
