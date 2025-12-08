@@ -44,7 +44,7 @@ def register_handlers(bot, is_private=False):
             send_two_photos(
                 bot, call.message,
                 RENT_IMG + "DAGPropysk.jpg",
-                RENT_IMG + "DAGPropysk2.jpg",
+                RENT_IMG + "DAGPropysk22.jpg",
                 descriptions[5]
             )
 
@@ -90,6 +90,7 @@ def register_handlers(bot, is_private=False):
                    "xtls-rprx-vision&encryption=none#avovpn.com")
             bot.answer_callback_query(call.id, "Ключ отправлен")
             bot.send_message(call.message.chat.id, key)
+
 
 
 
