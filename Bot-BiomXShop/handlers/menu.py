@@ -23,7 +23,10 @@ def register_handlers(bot):
             )
             markup.add(
                 types.InlineKeyboardButton("АККАУНТ №7🚹", callback_data="rent7"),
-                types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent8")
+                types.InlineKeyboardButton("АККАУНТ №8🚹", callback_data="rent8")
+            )
+            markup.add(
+                types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent9"),
             )
             bot.send_message(message.chat.id, "Выберите аккаунт для аренды:", reply_markup=markup)
 
@@ -132,6 +135,7 @@ def register_handlers(bot):
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
 
 
 
