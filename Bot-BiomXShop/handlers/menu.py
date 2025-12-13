@@ -1,6 +1,9 @@
+# handlers/menu.py (ОБНОВЛЕННЫЙ КОД)
+
 from telebot import types
 from config import DONATE_IMG, IMG_PATH
-from handlers import wheel  # Импорт для рулетки
+from handlers import wheel 
+# Импорт get_accounts_keyboard здесь больше не нужен, но если остался, это не критично.
 
 def register_handlers(bot):
 
@@ -8,6 +11,7 @@ def register_handlers(bot):
     def menu(message):
 
         if message.text == "⏰Аренда аккаунтов":
+            # --- ВЕРНУТЬ СТАРУЮ, ЖЕСТКО ЗАКОДИРОВАННУЮ КЛАВИАТУРУ ---
             markup = types.InlineKeyboardMarkup()
             markup.add(
                 types.InlineKeyboardButton("АККАУНТ №1🚹", callback_data="rent1"),
@@ -29,6 +33,7 @@ def register_handlers(bot):
                 types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent9"),
             )
             bot.send_message(message.chat.id, "Выберите аккаунт для аренды:", reply_markup=markup)
+            # -------------------------------------------------------------
 
         elif message.text == "💎Алмазы":
             bot.send_message(
