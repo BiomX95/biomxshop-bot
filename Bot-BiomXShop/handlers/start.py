@@ -1,6 +1,7 @@
 from telebot import types
 from config import IMG_PATH
 from handlers import wheel  # Импорт твоего wheel.py
+import os
 
 def register_handlers(bot):
     @bot.message_handler(commands=['start'])
@@ -39,4 +40,5 @@ def register_handlers(bot):
 
     # --- Регистрируем рулетку ---
     wheel.register_handlers(bot)  # <-- Здесь подключаем все хендлеры рулетки
+
 
