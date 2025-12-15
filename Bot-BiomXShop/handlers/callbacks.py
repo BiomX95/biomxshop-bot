@@ -98,8 +98,8 @@ def register_handlers(bot, is_private=False):
             markup = get_post_status_markup(account_id=8, is_admin=is_admin_user)
             send_two_photos(
                 bot, call.message,
-                RENT_IMG + "Dashaak.jpg",
-                RENT_IMG + "Dashaak2.jpg",
+                RENT_IMG + "Dashaakk.jpg",
+                RENT_IMG + "Dashaakk2.jpg",
                 descriptions[8],
                 reply_markup=markup
             )
@@ -134,6 +134,7 @@ def register_handlers(bot, is_private=False):
                      "xtls-rprx-vision&encryption=none#avovpn.com")
             bot.answer_callback_query(call.id, "Ключ отправлен")
             bot.send_message(call.message.chat.id, key)
+
 
 
 
