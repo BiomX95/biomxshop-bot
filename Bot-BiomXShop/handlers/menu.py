@@ -1,30 +1,44 @@
-# handlers/menu.py (ПОЛНОСТЬЮ ГОТОВЫЙ КОД)
+# handlers/menu.py (ОБНОВЛЕННЫЙ КОД)
 
 from telebot import types
 from config import DONATE_IMG, IMG_PATH
-from handlers import wheel 
-# --- НОВЫЙ ИМПОРТ show_rent_menu ---
-from handlers.rent import show_rent_menu
-# ---------------------------------
+from handlers import wheel 
 # Импорт get_accounts_keyboard здесь больше не нужен, но если остался, это не критично.
 
 def register_handlers(bot):
 
-    @bot.message_handler(func=lambda m: m.chat.type == "private")
-    def menu(message):
+    @bot.message_handler(func=lambda m: m.chat.type == "private")
+    def menu(message):
 
-        if message.text == "⏰Аренда аккаунтов":
-            # --- ВЫЗЫВАЕМ ФУНКЦИЮ ПОКАЗА МЕНЮ АРЕНДЫ, ПЕРЕДАВАЯ ЕЙ message ---
-            show_rent_menu(
-                target=message, # Передаем объект Message, а не Call/MockCall
-                bot=bot
-            )
-            # -------------------------------------------------------------
+        if message.text == "⏰Аренда аккаунтов":
+            # --- ВЕРНУТЬ СТАРУЮ, ЖЕСТКО ЗАКОДИРОВАННУЮ КЛАВИАТУРУ ---
+            markup = types.InlineKeyboardMarkup()
+            markup.add(
+                types.InlineKeyboardButton("АККАУНТ №1🚹", callback_data="rent1"),
+                types.InlineKeyboardButton("АККАУНТ №2🚺", callback_data="rent2")
+            )
+            markup.add(
+                types.InlineKeyboardButton("АККАУНТ №3🚹", callback_data="rent3"),
+                types.InlineKeyboardButton("АККАУНТ №4🚹", callback_data="rent4")
+            )
+            markup.add(
+                types.InlineKeyboardButton("АККАУНТ №5🚹", callback_data="rent5"),
+                types.InlineKeyboardButton("АККАУНТ №6🚹", callback_data="rent6")
+            )
+            markup.add(
+                types.InlineKeyboardButton("АККАУНТ №7🚹", callback_data="rent7"),
+                types.InlineKeyboardButton("АККАУНТ №8🚹", callback_data="rent8")
+            )
+            markup.add(
+                types.InlineKeyboardButton("СДАВАТЬ СВОЙ", callback_data="rent10"),
+            )
+            bot.send_message(message.chat.id, "Выберите аккаунт для аренды:", reply_markup=markup)
+            # -------------------------------------------------------------
 
-        elif message.text == "💎Алмазы":
-            bot.send_message(
-                message.chat.id,
-                """У нас цены ниже рыночных 🏷
+        elif message.text == "💎Алмазы":
+            bot.send_message(
+                message.chat.id,
+                """У нас цены ниже рыночных 🏷
 У нас цены ниже
 Рыночных 🏷
 Скидки на донаты💎🛍
@@ -38,12 +52,12 @@ def register_handlers(bot):
 
 Ваучер Лайт - 44₽
 Ваучер на неделю - 120₽
-Ваучер на месяц - 620₽ 
+Ваучер на месяц - 620₽ 
 
-Прайс на Эво - Пропуск 
-3 дня - 49₽   
+Прайс на Эво - Пропуск 
+3 дня - 49₽   
 7 дней - 95₽
-30 дней - 249₽ 
+30 дней - 249₽ 
 
 Пропуск прокачки💎
 Пропуск прокачки - 15LVL — 50₽
@@ -55,40 +69,40 @@ def register_handlers(bot):
 🎁Так же могу купить внутреигровые донаты: Особая посылка, Пропуск прокачки.
 
 ✍️По вопросам: @BiomXShop_Support"""
-            )
+            )
 
-        elif message.text == "Переходник":
-            bot.send_message(
-                message.chat.id,
-                "Основной канал — @BiomXShops\n"
-                "Отзывы — @BiomXShop_Otziv\n"
-                "Официальный Чат — @BiomXShop_Chat\n"
-                "Чат по Free Fire — @Freec_Fire\n"
-                "Сотрудничество — @BiomXShop_Sotryd"
-            )
+        elif message.text == "Переходник":
+            bot.send_message(
+                message.chat.id,
+                "Основной канал — @BiomXShops\n"
+                "Отзывы — @BiomXShop_Otziv\n"
+                "Официальный Чат — @BiomXShop_Chat\n"
+                "Чат по Free Fire — @Freec_Fire\n"
+                "Сотрудничество — @BiomXShop_Sotryd"
+            )
 
-        elif message.text == "🎮Наш сайт":
-            with open(IMG_PATH + "logo2.jpg", "rb") as photo:
-                bot.send_photo(
-                    message.chat.id,
-                    photo,
-                    caption="Скоро выйдет наш сайт маркетплейс:\nhttps://biomx.shop\nСледите за обновлениями! - @BiomXShops"
-                )
+        elif message.text == "🎮Наш сайт":
+            with open(IMG_PATH + "logo2.jpg", "rb") as photo:
+                bot.send_photo(
+                    message.chat.id,
+                    photo,
+                    caption="Скоро выйдет наш сайт маркетплейс:\nhttps://biomx.shop\nСледите за обновлениями! - @BiomXShops"
+                )
 
-        elif message.text == "🎁Особая посылка":
-            with open(DONATE_IMG + "posilka.jpg", "rb") as photo:
-                bot.send_photo(
-                    message.chat.id,
-                    photo,
-                    caption="Покупаем особые посылки и любые другие внутреигровые донаты🎁🤩\nПисать: @BiomXShop_Support"
-                )
+        elif message.text == "🎁Особая посылка":
+            with open(DONATE_IMG + "posilka.jpg", "rb") as photo:
+                bot.send_photo(
+                    message.chat.id,
+                    photo,
+                    caption="Покупаем особые посылки и любые другие внутреигровые донаты🎁🤩\nПисать: @BiomXShop_Support"
+                )
 
-        elif message.text == "⭐️Telegram stars":
-            with open(DONATE_IMG + "stars.jpg", "rb") as photo:
-                bot.send_photo(
-                    message.chat.id,
-                    photo,
-                    caption="""
+        elif message.text == "⭐️Telegram stars":
+            with open(DONATE_IMG + "stars.jpg", "rb") as photo:
+                bot.send_photo(
+                    message.chat.id,
+                    photo,
+                    caption="""
 🌟 50 Stars — 72₽
 🌟 75 Stars — 105₽
 🌟 100 Stars — 138₽
@@ -103,31 +117,24 @@ def register_handlers(bot):
 🌟 5000 Stars — 6948₽
 🌟 10000 Stars — 13895₽
 Писать: @BiomXShop_Support"""
-                )
+                )
 
-        elif message.text == "🚀🎮VPN для FF":
-            with open(IMG_PATH + "vpn.jpg", "rb") as photo:keyboard = types.InlineKeyboardMarkup()
-                keyboard.add(
-                    types.InlineKeyboardButton("Ключ для iPhone", callback_data="vpn_ios"),
-                    types.InlineKeyboardButton("Ключ для Android", callback_data="vpn_android")
-                )
+        elif message.text == "🚀🎮VPN для FF":
+            with open(IMG_PATH + "vpn.jpg", "rb") as photo:keyboard = types.InlineKeyboardMarkup()
+                keyboard.add(
+                    types.InlineKeyboardButton("Ключ для iPhone", callback_data="vpn_ios"),
+                    types.InlineKeyboardButton("Ключ для Android", callback_data="vpn_android")
+                )
 
-                bot.send_photo(
-                    message.chat.id,
-                    photo,
-                    caption="Выберите необходимый ключ для avoVPN ниже:",
-                    reply_markup=keyboard
-                )
+                bot.send_photo(
+                    message.chat.id,
+                    photo,
+                    caption="Выберите необходимый ключ для avoVPN ниже:",
+                    reply_markup=keyboard
+                )
 
-        elif message.text == "🎡 Рулетка":
-            wheel.start_wheel(bot, message)  # вызов рулетки
+        elif message.text == "🎡 Рулетка":
+            wheel.start_wheel(bot, message)  # вызов рулетки
 
-        else:
-            bot.send_message(message.chat.id, "Я не знаю эту команду.")
-
-
-
-
-
-
-
+        else:
+            bot.send_message(message.chat.id, "Я не знаю эту команду.")
