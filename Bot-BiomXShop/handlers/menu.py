@@ -14,7 +14,7 @@ def register_handlers(bot):
             # --- ВЕРНУТЬ СТАРУЮ, ЖЕСТКО ЗАКОДИРОВАННУЮ КЛАВИАТУРУ ---
             markup = types.InlineKeyboardMarkup()
             markup.add(
-                types.InlineKeyboardButton("АККАУНТ №1🚹 {online}", callback_data="rent1"),
+                types.InlineKeyboardButton("АККАУНТ №1🚹", callback_data="rent1"),
                 types.InlineKeyboardButton("АККАУНТ №2🚺", callback_data="rent2")
             )
             markup.add(
@@ -140,6 +140,7 @@ def register_handlers(bot):
 
         else:
             bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
 
 
 
