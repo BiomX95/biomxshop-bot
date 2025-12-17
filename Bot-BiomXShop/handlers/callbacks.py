@@ -104,17 +104,37 @@ def register_handlers(bot, is_private=False):
                 reply_markup=markup
             )
             
-        elif call.data == "rent8":
+        elif call.data == "rent9":
             markup = get_post_status_markup(account_id=8, is_admin=is_admin_user)
             send_two_photos(
                 bot, call.message,
-                RENT_IMG + "Dashaakk.jpg",
-                RENT_IMG + "Dashaakk2.jpg",
+                RENT_IMG + "ivan1.jpg",
+                RENT_IMG + "ivan2.jpg",
                 descriptions[9],
                 reply_markup=markup
             )
-
+            
         elif call.data == "rent10":
+            markup = get_post_status_markup(account_id=8, is_admin=is_admin_user)
+            send_two_photos(
+                bot, call.message,
+                RENT_IMG + "ivan3.jpg",
+                RENT_IMG + "ivan4.jpg",
+                descriptions[10],
+                reply_markup=markup
+            )
+            
+       elif call.data == "rent11":
+            markup = get_post_status_markup(account_id=8, is_admin=is_admin_user)
+            send_two_photos(
+                bot, call.message,
+                RENT_IMG + "ivan5.jpg",
+                RENT_IMG + "ivan6.jpg",
+                descriptions[11],
+                reply_markup=markup
+            )
+
+        elif call.data == "rent12":
             # Аккаунт 9 не имеет ID в базе, поэтому не прикрепляем клавиатуру
             bot.send_message(call.message.chat.id, descriptions[6])
 
@@ -134,6 +154,7 @@ def register_handlers(bot, is_private=False):
                      "xtls-rprx-vision&encryption=none#avovpn.com")
             bot.answer_callback_query(call.id, "Ключ отправлен")
             bot.send_message(call.message.chat.id, key)
+
 
 
 
