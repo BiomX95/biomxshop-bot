@@ -12,4 +12,5 @@ CHAT_IDS = [
 ]
 AUTOPOST_INTERVAL_SECONDS = 370
 
-ADMIN_ID = "7764515163"  # Список ID админов бота
+ADMIN_IDS = [7764515163, 5117331863]# Список ID админов бота
+
