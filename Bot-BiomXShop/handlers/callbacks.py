@@ -89,7 +89,7 @@ def register_handlers(bot, is_private=False):
             send_two_photos(
                 bot, call.message,
                 RENT_IMG + "yasmi.jpg",
-                RENT_IMG + "yasmi.jpg",
+                RENT_IMG + "yasmi2.jpg",
                 descriptions[7],
                 reply_markup=markup
             )
@@ -154,6 +154,7 @@ def register_handlers(bot, is_private=False):
                      "xtls-rprx-vision&encryption=none#avovpn.com")
             bot.answer_callback_query(call.id, "Ключ отправлен")
             bot.send_message(call.message.chat.id, key)
+
 
 
 
