@@ -1,10 +1,26 @@
-# database/db.py (Полный код)
+# database/db.py (ОБНОВЛЕННЫЙ ПОЛНЫЙ КОД)
 import sqlite3
 import time
 from typing import List, Tuple, Optional
 
 # Имя файла базы данных
 DB_NAME = 'database.db'
+
+# --- СПИСОК АККАУНТОВ ДЛЯ ДОБАВЛЕНИЯ ---
+# Добавляйте сюда новые названия. При перезапуске бота они добавятся в базу.
+ACCOUNTS_TO_CHECK = [
+    "АККАУНТ №1🚹",
+    "АККАУНТ №2🚺",
+    "АККАУНТ №3🚹",
+    "АККАУНТ №4🚹",
+    "АККАУНТ №5🚹",
+    "АККАУНТ №6🚹",
+    "АККАУНТ №7🚹",
+    "АККАУНТ №8🚹",
+    "АККАУНТ №9 🔥",  # <-- Новые аккаунты
+    "АККАУНТ №10 🚀" # <-- Новые аккаунты
+]
+# ---------------------------------------
 
 def create_tables():
     """Создает необходимые таблицы, если они не существуют."""
@@ -61,18 +77,27 @@ def add_rental_account(name: str):
     conn.close()
 
 def setup_initial_accounts():
-    """Создает тестовые аккаунты (до 8), если их нет."""
-    accounts = get_rental_accounts()
-    if not accounts:
-        # Добавляем 8 аккаунтов
-        add_rental_account("АККАУНТ №1🚹")
-        add_rental_account("АККАУНТ №2🚺")
-        add_rental_account("АККАУНТ №3🚹")
-        add_rental_account("АККАУНТ №4🚹")
-        add_rental_account("АККАУНТ №5🚹")
-        add_rental_account("АККАУНТ №6🚹")
-        add_rental_account("АККАУНТ №7🚹")
-        add_rental_account("АККАУНТ №8🚹")
+    """
+    Проверяет список ACCOUNTS_TO_CHECK.
+    Если аккаунта из списка нет в базе, он добавляется.
+    """
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+    
+    print("🔄 Проверка списка аккаунтов...")
+    
+    for name in ACCOUNTS_TO_CHECK:
+        # Проверяем, есть ли уже аккаунт с таким именем
+        cursor.execute("SELECT id FROM rental_accounts WHERE name = ?", (name,))
+        data = cursor.fetchone()
+        
+        if data is None:
+            # Если нет — добавляем
+            cursor.execute("INSERT INTO rental_accounts (name) VALUES (?)", (name,))
+            print(f"✅ Добавлен новый аккаунт: {name}")
+        
+    conn.commit()
+    conn.close()
 
 def reset_rental_accounts_table():
     """Очищает и пересоздает таблицу rental_accounts (для сброса ID)."""
@@ -93,3 +118,8 @@ def reset_rental_accounts_table():
     conn.commit()
     conn.close()
     print("Таблица rental_accounts сброшена и пересоздана.")
+
+# --- АВТОЗАПУСК ПРИ ИМПОРТЕ ---
+# Это гарантирует, что таблицы создадутся и новые аккаунты добавятся при старте бота
+create_tables()
+setup_initial_accounts()
