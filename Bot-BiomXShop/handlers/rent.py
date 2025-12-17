@@ -1,16 +1,15 @@
-# handlers/rent.py
+# handlers/rent.py (ПОЛНОСТЬЮ ГОТОВЫЙ КОД ПОД СПИСОК АДМИНОВ)
 
 from telebot import types
 from database.db import get_rental_account, set_rent_time
 from keyboards.rent_menu import get_accounts_keyboard, get_refresh_keyboard
 from utils.helpers import format_time_left
-from config import ADMIN_ID
+from config import ADMIN_IDS # Используем список из config.py
 
 # --- ЧАСТЬ ПОЛЬЗОВАТЕЛЯ: Проверка статуса (Всплывающее окно) ---
 
 def quick_status_check(call, bot):
     try:
-        # ! ИСПРАВЛЕНО: Принудительное преобразование в int
         acc_id = int(call.data.split('_')[2])
     except:
         bot.answer_callback_query(call.id, "Ошибка ID аккаунта.", show_alert=True)
@@ -42,17 +41,28 @@ def quick_status_check(call, bot):
 
 # --- ЧАСТЬ ПОЛЬЗОВАТЕЛЯ: Страница деталей (Обновление сообщения) ---
 
-def show_rent_menu(call, bot):
-    bot.edit_message_caption( 
-        chat_id=call.message.chat.id,
-        message_id=call.message.message_id,
-        caption="📂 <b>Доступные аккаунты для аренды:</b>\nВыберите аккаунт или проверьте его статус.",
-        parse_mode="HTML",
-        reply_markup=get_accounts_keyboard(is_admin=False)
-    )
+def show_rent_menu(target, bot): 
+    # Универсальная функция для Message и CallbackQuery
+    caption_text = "📂 <b>Доступные аккаунты для аренды:</b>\nВыберите аккаунт или проверьте его статус."
+    keyboard = get_accounts_keyboard(is_admin=False)
+    
+    if isinstance(target, types.CallbackQuery):
+        bot.edit_message_caption( 
+            chat_id=target.message.chat.id,
+            message_id=target.message.message_id,
+            caption=caption_text,
+            parse_mode="HTML",
+            reply_markup=keyboard
+        )
+    elif isinstance(target, types.Message):
+        bot.send_message(
+            chat_id=target.chat.id,
+            text=caption_text,
+            parse_mode="HTML",
+            reply_markup=keyboard
+        )
 
 def check_account_status(call, bot):
-    # ! ИСПРАВЛЕНО: Принудительное преобразование в int
     acc_id = int(call.data.split("_")[2])
     account = get_rental_account(acc_id)
     
@@ -89,20 +99,20 @@ def admin_rent_panel(message, bot):
         parse_mode="HTML",
         reply_markup=get_accounts_keyboard(is_admin=True)
     )
+
 def admin_select_account(call, bot):
-    # Проверка на АДМИНА
-    if call.from_user.id != int(ADMIN_ID): 
+    # ПРОВЕРКА ПО СПИСКУ ADMIN_IDS
+    if call.from_user.id not in ADMIN_IDS: 
         bot.answer_callback_query(call.id, "Доступ запрещен.")
         return
     
-    # ! ИСПРАВЛЕНО: Принудительное преобразование в int
     acc_id = int(call.data.split("_")[2])
     
     bot.answer_callback_query(call.id, f"Ожидаю ввод времени для аккаунта ID {acc_id}.", show_alert=False)
     
     msg = bot.send_message(
         call.message.chat.id, 
-        f"⏳ Для аккаунта ID {acc_id}, введите время аренды в <b>минутах</b> (только число).\nНапример: <code>120</code> для 2 часов. \n\n*Для ОСВОБОЖДЕНИЯ введите <code>0</code>*", 
+        f"⏳ Для аккаунта ID {acc_id}, введите время аренды в <b>минутах</b>.\n\n*Для ОСВОБОЖДЕНИЯ введите 0*", 
         parse_mode="HTML"
     )
     bot.register_next_step_handler(msg, lambda m: process_rent_time_input(m, acc_id, bot)) 
@@ -124,26 +134,26 @@ def process_rent_time_input(message, acc_id, bot):
         bot.send_message(message.chat.id, "❌ Ошибка! Нужно ввести целое число (минуты).")
 
         
-# --- ЛОГИКА ДЛЯ УСТАНОВКИ СТАТУСА С ПОСТА (set_rent_admin_ID) ---
+# --- ЛОГИКА ДЛЯ УСТАНОВКИ СТАТУСА С ПОСТА ---
 
 def admin_set_rent_from_post(call, bot):
     bot.answer_callback_query(call.id, text="Начало установки времени...") 
     
-    if call.from_user.id != int(ADMIN_ID):
+    # ПРОВЕРКА ПО СПИСКУ ADMIN_IDS
+    if call.from_user.id not in ADMIN_IDS:
         bot.send_message(call.message.chat.id, "🚫 Доступ запрещен. Вы не администратор.")
         return
         
     try:
-        # ! ИСПРАВЛЕНО: Принудительное преобразование в int
         acc_id = int(call.data.split('_')[3]) 
     except Exception as e:
-        error_msg = f"❌ Ошибка ID аккаунта. Колбэк: {call.data}. Ошибка: {e}" 
+        error_msg = f"❌ Ошибка ID аккаунта: {e}" 
         bot.send_message(call.message.chat.id, error_msg)
         return
 
     msg = bot.send_message(
         call.message.chat.id, 
-        f"⏳ Для аккаунта ID {acc_id}, введите время аренды в <b>минутах</b> (только число).\n\n*Для ОСВОБОЖДЕНИЯ введите <code>0</code>*", 
+        f"⏳ Для аккаунта ID {acc_id}, введите время аренды в <b>минутах</b> (0 — освободить).", 
         parse_mode="HTML"
     )
     
@@ -161,20 +171,20 @@ def process_rent_time_input_from_post(message, acc_id, bot):
             bot.send_message(message.chat.id, f"✅ Таймер для аккаунта ID {acc_id} установлен на {minutes} мин.")
             
     except ValueError:
-        bot.send_message(message.chat.id, "❌ Ошибка! Нужно ввести целое число (минуты).")
+        bot.send_message(message.chat.id, "❌ Ошибка! Нужно ввести целое число.")
 
 
 # ----------------------------------------------
 # ФУНКЦИЯ РЕГИСТРАЦИИ
 # ----------------------------------------------
 def register_handlers(bot):
-    # Регистрируем хендлеры сообщений (например, /admin_rent)
+    # Команда /admin_rent - доступна всем из списка ADMIN_IDS
     bot.register_message_handler(lambda m: admin_rent_panel(m, bot), 
                                  commands=['admin_rent'], 
-                                 func=lambda message: message.from_user.id == int(ADMIN_ID), 
+                                 func=lambda message: message.from_user.id in ADMIN_IDS, 
                                  pass_bot=False)
     
-    # Регистрируем хендлеры колбэков
+    # Регистрация колбэков
     bot.register_callback_query_handler(lambda call: show_rent_menu(call, bot), 
                                         func=lambda call: call.data == "open_rent_menu", 
                                         pass_bot=False)
@@ -186,13 +196,11 @@ def register_handlers(bot):
     bot.register_callback_query_handler(lambda call: admin_select_account(call, bot), 
                                         func=lambda call: call.data.startswith("admin_rent_"), 
                                         pass_bot=False)
-                                        
+                                            
     bot.register_callback_query_handler(lambda call: quick_status_check(call, bot), 
                                         func=lambda call: call.data.startswith("quick_status_"), 
                                         pass_bot=False)
-                                        
-    # --- РЕГИСТРАЦИЯ для установки статуса с поста (set_rent_admin_ID) ---
+                                            
     bot.register_callback_query_handler(lambda call: admin_set_rent_from_post(call, bot), 
                                         func=lambda call: call.data.startswith("set_rent_admin_"), 
-                                        pass_bot=False)
-    # --------------------------------------------------------------------------
+                                        pass_bot=False)# --------------------------------------------------------------------------
