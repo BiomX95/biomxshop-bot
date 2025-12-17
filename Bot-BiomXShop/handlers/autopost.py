@@ -7,7 +7,7 @@ AUTO_SEQUENCE = [
     "💎Алмазы",
     "⭐️Telegram stars",
     "🎁Особая посылка",
-    "⏰Аренда аккаунтов",
+    "АККАУНТ №2🚺",
     "🎮Наш сайт",
 ]
 
@@ -47,4 +47,5 @@ def auto_posting_sync(bot):
                     print(f"[AUTOPOST ERROR] ({chat_id}): {e}")
 
             time.sleep(AUTOPOST_INTERVAL_SECONDS)
+
 
