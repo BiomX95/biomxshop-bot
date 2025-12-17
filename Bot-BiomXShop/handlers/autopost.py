@@ -19,7 +19,6 @@ AUTO_SEQUENCE = [
     "АККАУНТ №9🚹",
     "АККАУНТ №10🚹",
     "АККАУНТ №11🚹",
-    "АККАУНТ №12🚹",
     "🎮Наш сайт",
 ]
 
@@ -59,6 +58,7 @@ def auto_posting_sync(bot):
                     print(f"[AUTOPOST ERROR] ({chat_id}): {e}")
 
             time.sleep(AUTOPOST_INTERVAL_SECONDS)
+
 
 
 
