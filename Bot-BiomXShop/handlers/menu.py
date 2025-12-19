@@ -8,7 +8,8 @@ def register_handlers(bot):
     @bot.message_handler(func=lambda m: True)
     def menu(message):
         
-        # --- ЛОГИКА ДЛЯ СПАМЕРА (чтобы не было "не знаю команду") ---
+        # --- 1. ЛОГИКА ДЛЯ СПАМЕРА (Распознавание аккаунтов) ---
+        # Если текст сообщения - это название одного из аккаунтов
         if message.text and message.text.startswith("АККАУНТ"):
             all_accs = get_rental_accounts()
             match = next((a for a in all_accs if a[1] == message.text), None)
@@ -20,9 +21,10 @@ def register_handlers(bot):
                         self.data = f"user_rent_{match[0]}"
                         self.from_user = message.from_user
                 check_account_status(MockCall(), bot)
-                return
+                return # Выходим, чтобы не сработал блок "не знаю команду"
 
-        # --- ТВОЙ ОСНОВНОЙ ФУНКЦИОНАЛ ---
+        # --- 2. ОБРАБОТКА КНОПОК МЕНЮ ---
+        
         if message.text == "⏰Аренда аккаунтов":
             markup = types.InlineKeyboardMarkup()
             markup.add(
@@ -115,7 +117,11 @@ def register_handlers(bot):
         elif message.text == "🎡 Рулетка":
             wheel.start_wheel(bot, message)
 
+        # --- 3. ЗАЩИТА ОТ ЛИШНИХ СООБЩЕНИЙ ---
         else:
+            # Бот отвечает "Я не знаю эту команду" ТОЛЬКО если чат приватный (ЛС)
+            # В группах он будет просто игнорировать неизвестный текст
             if message.chat.type == "private":
                 bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
 
