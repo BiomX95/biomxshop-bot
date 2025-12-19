@@ -95,8 +95,22 @@ def register_handlers(bot):
                 with open(DONATE_IMG + "stars.jpg", "rb") as photo:
                     bot.send_photo(
                         message.chat.id, photo,
-                        caption="🌟 50 Stars — 72₽\n🌟 75 Stars — 105₽\n🌟 100 Stars — 138₽\n🌟 500 Stars — 695₽\n🌟 1000 Stars — 1395₽\nПисать: @BiomXShop_Support"
-                    )
+                        caption="""
+🌟 50 Stars — 72₽
+🌟 75 Stars — 105₽
+🌟 100 Stars — 138₽
+🌟 150 Stars — 208₽
+🌟 250 Stars — 345₽
+🌟 350 Stars — 485₽
+🌟 500 Stars — 695₽
+🌟 750 Stars — 1045₽
+🌟 1000 Stars — 1395₽
+🌟 1500 Stars — 2090₽
+🌟 2500 Stars — 3475₽
+🌟 5000 Stars — 6948₽
+🌟 10000 Stars — 13895₽
+Писать: @BiomXShop_Support"""
+                )
             except:
                 bot.send_message(message.chat.id, "Цены на Stars уточняйте у @BiomXShop_Support")
 
@@ -118,6 +132,7 @@ def register_handlers(bot):
         else:
             if message.chat.type == "private":
                 bot.send_message(message.chat.id, "Я не знаю эту команду.")
+
 
 
 
