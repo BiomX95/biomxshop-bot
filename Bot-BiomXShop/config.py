@@ -1,4 +1,4 @@
-TOKEN = "7650590553:AAEDeGA3b_1CfxTD6Aws5EoOy_vIi6QlVVw"
+TOKEN = "8285913495:AAHQOwvQroB9uVFeVeycJ2QfT_xAydsvQQY"
 # Путь к картинкам аренды
 IMG_PATH = "images/"
 # Путь к картинкам логотипов / общего назначения

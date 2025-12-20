@@ -2,7 +2,7 @@
 
 from telebot import types
 from utils.send_media import send_two_photos
-from config import RENT_IMG, ADMIN_ID # Убедитесь, что ADMIN_ID импортирован
+from config import RENT_IMG, ADMIN_IDS # Убедитесь, что ADMIN_ID импортирован
 from texts.rent_texts import descriptions
 
 # --- НОВЫЙ ИМПОРТ: КЛАВИАТУРА ДЛЯ ПОСТА ---
@@ -19,7 +19,7 @@ def register_handlers(bot, is_private=False):
         # Определяем, является ли пользователь админом
         # Используем try/except, так как в config может быть не целое число
         try:
-            is_admin_user = call.from_user.id == int(ADMIN_ID)
+            is_admin_user = call.from_user.id == int(ADMIN_IDS)
         except:
             is_admin_user = False
         
@@ -124,7 +124,7 @@ def register_handlers(bot, is_private=False):
                 reply_markup=markup
             )
             
-       elif call.data == "rent11":
+        elif call.data == "rent11":
             markup = get_post_status_markup(account_id=8, is_admin=is_admin_user)
             send_two_photos(
                 bot, call.message,
